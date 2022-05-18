@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 3.10.0 May 17, 2022
 
 ### Enhancements:
 
@@ -11,6 +11,7 @@
 - Add support for animated image formats to Aim Image object (devfox-se)
 - Add `AimLogger` for Catboost (devfox-se)
 - Add `AimCallback` for LightGBM (devfox-se)
+- Keep the extents of `HighPlot` axes brush in the state and the URL (VkoHov)
 - Integrate `aim` with `cimport`-able `aimrocks` (mahnerak)
 - Add `__slots__` to some classes to improve performance (mahnerak)
 - Define base abstractions for `Iterator` and `DB` by borrowing from `aimrocks` (mahnerak)
@@ -21,6 +22,7 @@
 - Add ability to track and visualize stdout/stderr (mihran113, VkoHov)
 - Fix `AimLogger` deprecation issues related to release of PyTorch Lightning v1.5 (arnauddhaene)
 - Enable better autocomplete experience with monaco editor (arsengit)
+- Pre-loading and caching necessary resources, add pre-loader animation to Aim UI (arsengit) 
 
 ### Fixes:
 
