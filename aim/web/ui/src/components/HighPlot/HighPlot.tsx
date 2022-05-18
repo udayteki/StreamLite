@@ -8,7 +8,9 @@ import useResizeObserver from 'hooks/window/useResizeObserver';
 
 import { IFocusedState } from 'types/services/models/metrics/metricsAppModel';
 import { IHighPlotProps } from 'types/components/HighPlot/HighPlot';
+import { ILineDataType } from 'types/utils/d3/drawParallelLines';
 
+import { filterDataByBrushedScale } from 'utils/d3/drawParallelAxesBrush';
 import {
   clearArea,
   drawParallelAxes,
@@ -107,6 +109,15 @@ const HighPlot = React.forwardRef(function HighPlot(
     });
 
     if (attributesRef?.current.xScale && attributesRef.current.yScale) {
+      const filteredData = brushRef.current.domainsData
+        ? data.data.filter((line: ILineDataType) =>
+            filterDataByBrushedScale({
+              line,
+              domainsData: brushRef.current.domainsData,
+              dimensions: data.dimensions,
+            }),
+          )
+        : data.data;
       drawParallelLines({
         index,
         nameKey,
@@ -117,10 +128,10 @@ const HighPlot = React.forwardRef(function HighPlot(
         isVisibleColorIndicator,
         linesRef,
         dimensions: data.dimensions,
-        data: data.data,
+        data: filteredData,
       });
 
-      linesRef.current.data = data.data;
+      linesRef.current.data = filteredData;
 
       // render lines with low quality if lines count are more than 'RENDER_LINES_OPTIMIZED_LIMIT'
       if (!readOnly && linesNodeRef.current) {

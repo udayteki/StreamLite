@@ -198,7 +198,7 @@ function scalePointDomainData(yScale: IAxisScale, extent: number[]): string[] {
   return resultDomainData;
 }
 
-function filterDataByBrushedScale({
+export function filterDataByBrushedScale({
   line,
   domainsData,
   dimensions,

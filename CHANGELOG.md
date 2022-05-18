@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixes:
+
+- Fix the scale point type axis brush extents persisting (VkoHov)
+
 ## 3.10.0 May 17, 2022
 
 ### Enhancements:
