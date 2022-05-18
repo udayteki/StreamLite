@@ -7,12 +7,14 @@ export default function onAxisBrushExtentChange<M extends State>({
   key,
   extent,
   chartIndex,
+  containerHeight,
   model,
   updateModelData,
 }: {
   key: string;
-  extent: [number, number] | [string, string] | null;
+  extent: [number, number] | null;
   chartIndex: number;
+  containerHeight: number;
   model: IModel<M>;
   updateModelData: (
     configData: IAppModelConfig | any,
@@ -23,7 +25,7 @@ export default function onAxisBrushExtentChange<M extends State>({
   if (configData?.chart) {
     let brushExtents: {
       [key: string]: {
-        [key: string]: [number, number] | [string, string];
+        [key: string]: [number, number];
       };
     } = {
       ...configData.chart.brushExtents,
@@ -49,6 +51,7 @@ export default function onAxisBrushExtentChange<M extends State>({
     }
 
     configData.chart.brushExtents = brushExtents;
+    configData.chart.containerHeight = containerHeight;
 
     updateModelData({ ...configData, chart: { ...configData?.chart } }, true);
   }

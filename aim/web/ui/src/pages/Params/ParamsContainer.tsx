@@ -132,6 +132,7 @@ function ParamsContainer(): React.FunctionComponentElement<React.ReactNode> {
       requestStatus={paramsData?.requestStatus!}
       selectedRows={paramsData?.selectedRows!}
       brushExtents={paramsData?.config?.chart?.brushExtents}
+      containerHeight={paramsData?.config?.chart?.containerHeight}
       isVisibleColorIndicator={
         paramsData?.config?.chart?.isVisibleColorIndicator!
       }

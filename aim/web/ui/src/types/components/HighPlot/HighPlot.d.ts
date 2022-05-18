@@ -10,16 +10,18 @@ export interface IHighPlotProps {
   nameKey?: string;
   brushExtents: {
     [key: string]: {
-      [key: string]: [number, number] | [string, string];
+      [key: string]: [number, number];
     };
   };
+  containerHeight: number;
   curveInterpolation: CurveEnum;
   isVisibleColorIndicator: boolean;
   syncHoverState: (args: ISyncHoverStateArgs) => void;
   onAxisBrushExtentChange: (
     key: string,
-    extent: [number, number] | [string, string] | null,
+    extent: [number, number] | null,
     chartIndex: number,
+    containerHeight: number,
   ) => void;
   data: any;
   chartTitle?: IChartTitle;

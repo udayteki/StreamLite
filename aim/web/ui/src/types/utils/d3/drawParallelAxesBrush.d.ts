@@ -12,12 +12,14 @@ export interface IDrawParallelAxesBrushBrushArgs {
   linesRef: React.MutableRefObject<>;
   onAxisBrushExtentChange: (
     key: string,
-    extent: [number, number] | [string, string] | null,
+    extent: [number, number] | null,
     chartIndex: number,
+    containerHeight: number,
   ) => void;
+  containerHeight: number;
   brushExtents: {
     [key: string]: {
-      [key: string]: [number, number] | [string, string];
+      [key: string]: [number, number];
     };
   };
   data: ILineDataType[];

@@ -58,7 +58,7 @@ export interface IParamsProps extends Partial<RouteChildrenProps> {
   selectedRows: { [key: string]: any };
   brushExtents: {
     [key: string]: {
-      [key: string]: [number, number] | [string, string];
+      [key: string]: [number, number];
     };
   };
   onTableRowHover?: (rowKey?: string) => void;
@@ -99,9 +99,11 @@ export interface IParamsProps extends Partial<RouteChildrenProps> {
   onShuffleChange: (name: 'stroke' | 'color') => void;
   onAxisBrushExtentChange: (
     key: string,
-    extent: [number, number] | [string, string] | null,
+    extent: [number, number] | null,
     chartIndex: number,
+    containerHeight: number,
   ) => void;
+  containerHeight: number;
   columnsWidths: { [key: string]: number };
   liveUpdateConfig: { delay: number; enabled: boolean };
   onLiveUpdateConfigChange: (config: {

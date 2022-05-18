@@ -104,6 +104,7 @@ const Params = ({
   columnsOrder,
   brushExtents,
   chartPanelOffsetHeight,
+  containerHeight,
 }: IParamsProps): React.FunctionComponentElement<React.ReactNode> => {
   const chartProps: any[] = React.useMemo(() => {
     return (highPlotData || []).map((chartData: any, index: number) => ({
@@ -112,6 +113,7 @@ const Params = ({
       onAxisBrushExtentChange,
       brushExtents,
       chartTitle: chartTitleData[index],
+      containerHeight,
     }));
   }, [
     highPlotData,
@@ -120,6 +122,7 @@ const Params = ({
     chartTitleData,
     onAxisBrushExtentChange,
     brushExtents,
+    containerHeight,
   ]);
 
   return (

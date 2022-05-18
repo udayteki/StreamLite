@@ -395,6 +395,7 @@ function createAppModel(appConfig: IAppInitialConfig) {
                   CONTROLS_DEFAULT_CONFIG.params.tooltip.selectedParams,
               },
               brushExtents: {},
+              containerHeight: 0,
             };
           }
           if (components.charts.indexOf(ChartTypeEnum.ScatterPlot) !== -1) {
@@ -4692,13 +4693,15 @@ function createAppModel(appConfig: IAppInitialConfig) {
           },
           onAxisBrushExtentChange(
             key: string,
-            extent: [number, number] | [string, string] | null,
+            extent: [number, number] | null,
             chartIndex: number,
+            containerHeight: number,
           ): void {
             onAxisBrushExtentChange({
               key,
               extent,
               chartIndex,
+              containerHeight,
               model,
               updateModelData,
             });

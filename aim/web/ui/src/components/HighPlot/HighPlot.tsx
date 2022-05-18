@@ -37,6 +37,7 @@ const HighPlot = React.forwardRef(function HighPlot(
     brushExtents,
     readOnly = false,
     resizeMode,
+    containerHeight,
   } = props;
 
   // boxes
@@ -161,6 +162,7 @@ const HighPlot = React.forwardRef(function HighPlot(
         data: data.data,
         index,
         syncHoverState,
+        containerHeight,
       });
     }
   }

@@ -138,9 +138,10 @@ export interface IHighPlotConfig {
   tooltip: IChartTooltip;
   brushExtents: {
     [key: string]: {
-      [key: string]: [number, number] | [string, string];
+      [key: string]: [number, number];
     };
   };
+  containerHeight: number;
 }
 
 export interface ILineChartConfig {
