@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Enhancements:
+
+- Display std.dev/err aggregated values in the table (VkoHov)
+
 ### Fixes:
 
 - Fix the scale point type axis brush extents persisting (VkoHov)
