@@ -159,6 +159,7 @@ function MetricsContainer(): React.FunctionComponentElement<React.ReactNode> {
         requestStatus={metricsData?.requestStatus!}
         selectFormData={metricsData?.selectFormData!}
         columnsOrder={metricsData?.config?.table?.columnsOrder!}
+        tableConfig={metricsData?.config?.table!}
         // methods
         onChangeTooltip={metricAppModel.onChangeTooltip}
         onIgnoreOutliersChange={metricAppModel.onIgnoreOutliersChange}

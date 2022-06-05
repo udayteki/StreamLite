@@ -27,6 +27,8 @@ import RowHeightPopover from 'pages/Metrics/components/Table/RowHeightPopover/Ro
 
 import { ITableProps } from 'types/components/Table/Table';
 
+import { encode } from 'utils/encoder/encoder';
+
 import TableLoader from '../TableLoader/TableLoader';
 import CustomTable from '../CustomTable/Table';
 
@@ -213,21 +215,27 @@ const Table = React.forwardRef(function Table(
         hiddenColumnsRef.current = hiddenColumns;
       }
       if (!!newColumns) {
-        columnsRef.current = newColumns;
-        setColumnsData(newColumns);
+        if (encode(columnsRef.current, true) !== encode(newColumns, true)) {
+          columnsRef.current = newColumns;
+          setColumnsData(newColumns);
+        }
       }
       virtualizedUpdate();
     } else {
       if (!!newData) {
-        dataRef.current = newData;
-        setRowData(newData);
+        if (encode(dataRef.current, true) !== encode(newData, true)) {
+          dataRef.current = newData;
+          setRowData(newData);
+        }
       }
       if (!!hiddenColumns) {
         hiddenColumnsRef.current = hiddenColumns;
       }
       if (!!newColumns) {
-        columnsRef.current = newColumns;
-        setColumnsData(newColumns);
+        if (encode(columnsRef.current, true) !== encode(newColumns, true)) {
+          columnsRef.current = newColumns;
+          setColumnsData(newColumns);
+        }
       }
     }
   }
@@ -934,57 +942,4 @@ const Table = React.forwardRef(function Table(
   );
 });
 
-function propsComparator(
-  prevProps: ITableProps,
-  nextProps: ITableProps,
-): boolean {
-  // Add custom here checks here
-
-  if (prevProps.isLoading !== nextProps.isLoading) {
-    return false;
-  }
-
-  if (prevProps.rowHeight !== nextProps.rowHeight) {
-    return false;
-  }
-
-  if (prevProps.sortFields !== nextProps.sortFields) {
-    return false;
-  }
-
-  if (prevProps.resizeMode !== nextProps.resizeMode) {
-    return false;
-  }
-
-  if (prevProps.columnsWidths !== nextProps.columnsWidths) {
-    return false;
-  }
-
-  if (prevProps.selectedRows !== nextProps.selectedRows) {
-    return false;
-  }
-
-  if (prevProps.hiddenColumns !== nextProps.hiddenColumns) {
-    return false;
-  }
-
-  if (prevProps.hiddenChartRows !== nextProps.hiddenChartRows) {
-    return false;
-  }
-
-  if (prevProps.columnsOrder !== nextProps.columnsOrder) {
-    return false;
-  }
-
-  if (prevProps.focusedState?.active !== nextProps.focusedState?.active) {
-    return false;
-  }
-
-  if (prevProps.columnsColorScales !== nextProps.columnsColorScales) {
-    return false;
-  }
-
-  return true;
-}
-
-export default React.memo(Table, propsComparator);
+export default React.memo(Table);

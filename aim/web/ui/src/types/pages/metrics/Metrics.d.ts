@@ -37,7 +37,10 @@ import { IActivePoint } from 'types/utils/d3/drawHoverAttributes';
 import { IBookmarkFormState } from 'types/components/BookmarkForm/BookmarkForm';
 import { INotification } from 'types/components/NotificationContainer/NotificationContainer';
 import { ILine } from 'types/components/LineChart/LineChart';
-import { IColumnsOrder } from 'types/services/models/explorer/createAppModel';
+import {
+  IColumnsOrder,
+  ITableConfig,
+} from 'types/services/models/explorer/createAppModel';
 
 import { SmoothingAlgorithmEnum } from 'utils/smoothingData';
 import { CurveEnum } from 'utils/d3';
@@ -82,6 +85,7 @@ export interface IMetricProps extends Partial<RouteChildrenProps> {
   resizeMode: ResizeModeEnum;
   selectFormData: { options: ISelectOption[]; suggestions: string[] };
   columnsOrder: IColumnsOrder;
+  tableConfig: ITableConfig;
   onChangeTooltip: (tooltip: Partial<IPanelTooltip>) => void;
   onIgnoreOutliersChange: () => void;
   onZoomChange: (zoom: Partial<IChartZoom>) => void;
