@@ -22,6 +22,7 @@
 - Add the date and the duration of run in the header of the single run page (VkoHov)
 - Add the name, status and duration of run in the runs table of the tags page (VkoHov)
 - Fit long name values in manage columns popover (arsengit)
+- Add caching mechanism for sequence queries to optimize query performance (mihran113)
 
 ### Fixes:
 
@@ -37,6 +38,7 @@
 - Change the font of the runs navigation popover (VkoHov)
 - Keep color persistence state after page reload (VkoHov)
 - Resolve content blinking issue after search in the run page (arsengit)
+- Fix timezone issues for activity map (mihran113)
 
 ## 3.10.3 May 31, 2022
 
