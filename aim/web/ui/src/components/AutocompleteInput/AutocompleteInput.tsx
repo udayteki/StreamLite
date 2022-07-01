@@ -123,11 +123,11 @@ function AutocompleteInput({
       monaco.editor.setModelMarkers(monaco.editor.getModels()[0], 'marker', [
         {
           startLineNumber: error?.detail.line,
-          startColumn: error?.detail.offset === 2 ? 1 : error?.detail.offset,
+          startColumn: error?.detail.offset === 3 ? 1 : error?.detail.offset,
           endLineNumber: error?.detail.line,
           endColumn:
             error?.detail?.end_offset ||
-            (error?.detail.offset === 2
+            (error?.detail.offset === 3
               ? value.length + 1
               : error?.detail.offset),
           message: error?.message,
