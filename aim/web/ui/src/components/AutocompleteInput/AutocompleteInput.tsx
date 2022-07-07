@@ -10,6 +10,8 @@ import { Icon, Text } from 'components/kit';
 import { getMonacoConfig } from 'config/monacoConfig/monacoConfig';
 import { DOCUMENTATIONS } from 'config/references';
 
+import { AppNameEnumUpperCase } from 'services/models/explorer';
+
 import { showAutocompletion } from 'utils/showAutocompletion';
 
 import { IAutocompleteInputProps } from './ AutocompleteInput';
@@ -25,6 +27,7 @@ function AutocompleteInput({
   refObject,
   error,
   disabled = false,
+  appName = AppNameEnumUpperCase.METRICS,
   //callback functions
   onEnter,
   onChange,
@@ -123,13 +126,9 @@ function AutocompleteInput({
       monaco.editor.setModelMarkers(monaco.editor.getModels()[0], 'marker', [
         {
           startLineNumber: error?.detail.line,
-          startColumn: error?.detail.offset === 3 ? 1 : error?.detail.offset,
+          startColumn: error?.detail.offset,
           endLineNumber: error?.detail.line,
-          endColumn:
-            error?.detail?.end_offset ||
-            (error?.detail.offset === 3
-              ? value.length + 1
-              : error?.detail.offset),
+          endColumn: error?.detail?.end_offset || error?.detail.offset,
           message: error?.message,
           severity: monaco.MarkerSeverity.Error,
         },
@@ -252,7 +251,7 @@ function AutocompleteInput({
               Aim Query Language is pythonic and fairly easy to get used to. If
               you having issue, please refer to the{' '}
               <a
-                href={DOCUMENTATIONS.MAIN_PAGE}
+                href={DOCUMENTATIONS.EXPLORERS[appName].SEARCH}
                 target='_blank'
                 rel='noreferrer'
               >

@@ -1,16 +1,15 @@
 # Changelog
 
-## Unreleased 
+## 3.11.2 
 
 ### Enhancements:
 
-- Add support for tensorboard audios conversion (mihran113)
 - Display the error position when getting syntax errors after searching (arsengit)
-
 
 ### Fixes:
 
-- Fix tensorboard log conversion for images (mihran113)
+- Remove the progress bar blinking when searching runs in Runs Explorer (KaroMourad)
+- Fix the "matched runs" sentence color style in progress bars (KaroMourad)
 - Fix `SyntaxError` handling for python3.10+ (mihran113)
 
 ## 3.11.1 Jun 27, 2022
