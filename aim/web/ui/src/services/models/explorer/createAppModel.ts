@@ -1618,7 +1618,7 @@ function createAppModel(appConfig: IAppInitialConfig) {
         type: 'text/csv;charset=utf-8;',
       });
       saveAs(blob, `${appName}-${moment().format(DATE_EXPORTING_FORMAT)}.csv`);
-      analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table.exports.csv);
+      analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table?.exports?.csv);
     }
 
     const onActivePointChange = _.debounce(
@@ -2947,7 +2947,7 @@ function createAppModel(appConfig: IAppInitialConfig) {
           type: 'text/csv;charset=utf-8;',
         });
         saveAs(blob, `runs-${moment().format(DATE_EXPORTING_FORMAT)}.csv`);
-        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table.exports.csv);
+        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table?.exports?.csv);
       }
 
       function onModelNotificationDelete(id: number): void {
@@ -4321,7 +4321,7 @@ function createAppModel(appConfig: IAppInitialConfig) {
           type: 'text/csv;charset=utf-8;',
         });
         saveAs(blob, `params-${moment().format(DATE_EXPORTING_FORMAT)}.csv`);
-        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table.exports.csv);
+        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table?.exports?.csv);
       }
 
       function updateModelData(
@@ -5883,7 +5883,7 @@ function createAppModel(appConfig: IAppInitialConfig) {
           blob,
           `${appName}-${moment().format(DATE_EXPORTING_FORMAT)}.csv`,
         );
-        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table.exports.csv);
+        analytics.trackEvent(ANALYTICS_EVENT_KEYS[appName].table?.exports?.csv);
       }
 
       function onActivePointChange(

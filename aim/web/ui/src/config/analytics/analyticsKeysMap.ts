@@ -229,6 +229,7 @@ export const ANALYTICS_EVENT_KEYS = {
         '[ImagesExplorer][ImagesPanel][ImageBox] Open full size mode',
     },
   },
+  figures: {},
   runDetails: {
     pageView: '[RunDetail] Page view',
     tabs: {

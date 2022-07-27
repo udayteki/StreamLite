@@ -88,7 +88,7 @@ function getType(monaco: Monaco, maybe: any, isMember = false) {
   }
 }
 
-function getSuggestions(monaco: Monaco, options: Record<string, string>) {
+function getSuggestions(monaco: Monaco, options: Record<string, string> = {}) {
   /* eslint-disable */
   // NOTE: this code segment was taken(modified) from the following git gist
   // https://gist.github.com/mwrouse/05d8c11cd3872c19c684bd1904a2202e
