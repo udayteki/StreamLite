@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import { Text } from 'components/kit';
+
 import createEngine from '../BaseExplorerCore/core-store';
 import { IEngineConfigFinal } from '../BaseExplorerCore/types';
 
@@ -38,7 +40,6 @@ function BaseExplorer(props: IBaseExplorerProps) {
         engine={props.engineInstance}
         explorerName={props.explorerName}
       />
-      {/* {__DEV__ && <Text>Engine status ::: status</Text>} */}
       <div
         className='flex fjb fac'
         style={{
@@ -53,7 +54,6 @@ function BaseExplorer(props: IBaseExplorerProps) {
     </div>
   ) : (
     <>
-      {console.log('initializing')}
       <div>Initializing</div>
     </>
   );
