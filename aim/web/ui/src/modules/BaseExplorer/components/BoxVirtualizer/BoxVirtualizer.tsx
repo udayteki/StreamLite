@@ -1,5 +1,6 @@
 import * as React from 'react';
 import _ from 'lodash-es';
+import * as htmlToImage from 'html-to-image';
 import { useResizeObserver } from 'hooks';
 
 import { AimFlatObjectBase } from 'types/core/AimObjects';
@@ -22,6 +23,7 @@ function BoxVirtualizer(props: IBoxVirtualizerProps<AimFlatObjectBase<any>>) {
     width: 0,
     height: 0,
   });
+  let [exporting, setExporting] = React.useState(false);
 
   const onScroll = React.useCallback(({ target }: any) => {
     setGridWindow({
@@ -79,13 +81,15 @@ function BoxVirtualizer(props: IBoxVirtualizerProps<AimFlatObjectBase<any>>) {
 
   useResizeObserver(resizeObserverCallback, container, observerReturnCallback);
 
-  const filteredItems = data.filter(
-    (item: AimFlatObjectBase<any>) =>
-      item.style.left >= gridWindow.left - item.style.width &&
-      item.style.left <= gridWindow.left + gridWindow.width &&
-      item.style.top >= gridWindow.top - item.style.height &&
-      item.style.top <= gridWindow.top + gridWindow.height,
-  );
+  const filteredItems = exporting
+    ? data
+    : data.filter(
+        (item: AimFlatObjectBase<any>) =>
+          item.style.left >= gridWindow.left - item.style.width &&
+          item.style.left <= gridWindow.left + gridWindow.width &&
+          item.style.top >= gridWindow.top - item.style.height &&
+          item.style.top <= gridWindow.top + gridWindow.height,
+      );
 
   const groupedByPosition = _.groupBy(filteredItems, (item) => {
     const rowId = item.groups?.rows ? item.groups.rows[0] : '';
@@ -121,6 +125,40 @@ function BoxVirtualizer(props: IBoxVirtualizerProps<AimFlatObjectBase<any>>) {
       height: bottomEdge + itemHeight + props.offset - horizontalRulerHeight,
     };
   }, [data, props.offset]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setExporting(true);
+    }, 100);
+  }, [data]);
+
+  React.useEffect(() => {
+    if (exporting) {
+      setTimeout(() => {
+        htmlToImage
+          .toJpeg(container.current!, {
+            cacheBust: true,
+            width: gridSize.width,
+            height: gridSize.height,
+          })
+          .then((dataUrl) => {
+            const link = document.createElement('a');
+            link.download = 'figures.jpeg';
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 1000);
+    }
+  }, [exporting]);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setExporting(false);
+    }, 2000);
+  }, [exporting]);
 
   return (
     <div className='BoxVirtualizer'>

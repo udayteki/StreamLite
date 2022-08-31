@@ -29,7 +29,7 @@ const groupings: GroupingConfigs = {
       };
     },
     defaultApplications: {
-      fields: ['run.hash', 'figures.name'],
+      fields: [],
       orders: [Order.ASC, Order.ASC],
     },
     // state: {
@@ -63,7 +63,7 @@ const groupings: GroupingConfigs = {
       };
     },
     defaultApplications: {
-      fields: ['record.step'],
+      fields: [],
       orders: [Order.DESC],
     },
     // state: {
