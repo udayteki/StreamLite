@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactJson from 'react-json-view';
 
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+import JSONViewer from 'components/kit/JSONViewer';
 
 import { IJsonViewPopoverProps } from './types.d';
 
@@ -18,7 +18,7 @@ function JsonViewPopover({
   return (
     <ErrorBoundary>
       <div className='JsonViewPopover'>
-        <ReactJson
+        <JSONViewer
           style={{ width: '100%' }}
           name={false}
           theme='bright:inverted'
