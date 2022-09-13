@@ -3,12 +3,12 @@ import ReactJson from 'react-json-view';
 
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 
-import { IJSONViewerProps } from './JSONViewer.d';
+import { IDictVisualizerProps } from './DictVisualizer.d';
 
-import './JSONViewer.scss';
+import './DictVisualizer.scss';
 
-function JSONViewer(
-  props: IJSONViewerProps,
+function DictVisualizer(
+  props: IDictVisualizerProps,
 ): React.FunctionComponentElement<React.ReactNode> {
   const [cursor, setCursor] = React.useState(0);
   const data = React.useRef<{ [key: string]: unknown }>({});
@@ -87,6 +87,6 @@ function JSONViewer(
   );
 }
 
-JSONViewer.displayName = 'JSONViewer';
+DictVisualizer.displayName = 'DictVisualizer';
 
-export default React.memo<IJSONViewerProps>(JSONViewer);
+export default React.memo<IDictVisualizerProps>(DictVisualizer);
