@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 
@@ -11,9 +12,7 @@ import { IDictVisualizerProps } from './DictVisualizer.d';
 
 import './DictVisualizer.scss';
 
-function DictVisualizer(
-  props: IDictVisualizerProps,
-): React.FunctionComponentElement<React.ReactNode> {
+function DictVisualizer(props: IDictVisualizerProps) {
   const flattenDict = React.useCallback(
     (dict: { [key: string]: unknown }, level: number = 0) => {
       let rows: {
@@ -53,26 +52,35 @@ function DictVisualizer(
   return (
     <ErrorBoundary>
       <div style={props.style} className='DictVisualizer'>
-        <List height={150} itemCount={rows.length} itemSize={13} width={300}>
-          {({ index, style }: ListChildComponentProps) => {
-            const row = rows[index];
-            return (
-              <div
-                key={row.key}
-                className='DictVisualizer__row'
-                style={{
-                  ...style,
-                  paddingLeft: (row.level + 1) * 10,
-                  borderLeft: '1px solid #ccc',
-                }}
-              >
-                <Text>
-                  {row.key}: {row.value}
-                </Text>
-              </div>
-            );
-          }}
-        </List>
+        <AutoSizer>
+          {({ width, height }) => (
+            <List
+              width={width}
+              height={height}
+              itemCount={rows.length}
+              itemSize={13}
+            >
+              {({ index, style }: ListChildComponentProps) => {
+                const row = rows[index];
+                return (
+                  <div
+                    key={row.key}
+                    className='DictVisualizer__row'
+                    style={{
+                      ...style,
+                      paddingLeft: (row.level + 1) * 10,
+                      borderLeft: '1px solid #ccc',
+                    }}
+                  >
+                    <Text>
+                      {row.key}: {row.value}
+                    </Text>
+                  </div>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
       </div>
     </ErrorBoundary>
   );
