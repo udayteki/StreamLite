@@ -6,3 +6,14 @@
   width: 100%;
   height: 100%;
 }
+
+.DictVisualizer__row {
+  display: flex;
+  padding-left: $space-xs;
+  border-left: $border-dark;
+}
+
+.DictVisualizer__row__indent {
+  margin-right: $space-xs;
+  border-left: $border-dark;
+}
