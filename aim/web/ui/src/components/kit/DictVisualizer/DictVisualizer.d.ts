@@ -1,3 +1,6 @@
-import { ReactJsonViewProps } from 'react-json-view';
+import { CSSProperties } from 'react';
 
-export interface IDictVisualizerProps extends ReactJsonViewProps {}
+export interface IDictVisualizerProps {
+  src: object | { [key: string]: unknown };
+  style?: CSSProperties;
+}

@@ -1,7 +1,11 @@
 import * as React from 'react';
-import ReactJson from 'react-json-view';
+import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+
+import { formatValue } from 'utils/formatValue';
+
+import Text from '../Text';
 
 import { IDictVisualizerProps } from './DictVisualizer.d';
 
@@ -10,79 +14,66 @@ import './DictVisualizer.scss';
 function DictVisualizer(
   props: IDictVisualizerProps,
 ): React.FunctionComponentElement<React.ReactNode> {
-  const [cursor, setCursor] = React.useState(0);
-  const data = React.useRef<{ [key: string]: unknown }>({});
-  const isFullySliced = React.useRef<boolean>(false);
-
-  const getSrcSlice = React.useCallback(
-    (object: object, current: number, i: number = 0) => {
-      let dict: { [key: string]: unknown } = {};
-      let fullDictSliced = true;
-      for (let key in object) {
-        if (i >= current && i < current + 100) {
-          let item = (object as any)[key];
-          if (
-            typeof item === 'object' &&
-            item !== null &&
-            !Array.isArray(item)
-          ) {
-            const {
-              result,
-              index,
-              fullDictSliced: isFullySliced,
-            } = getSrcSlice(item, current, i);
-            dict[key] = result;
-            i = index;
-            // if (!isFullySliced) {
-            //   fullDictSliced = false;
-            //   break;
-            // }
-          } else {
-            dict[key] = item;
-            i++;
-          }
-        } else if (i >= current + 100) {
-          fullDictSliced = false;
-          break;
+  const flattenDict = React.useCallback(
+    (dict: { [key: string]: unknown }, level: number = 0) => {
+      let rows: {
+        level: number;
+        key: string;
+        value: unknown;
+      }[] = [];
+      for (let key in dict) {
+        let item: unknown = dict[key];
+        if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
+          rows.push({
+            level,
+            key,
+            value: undefined,
+          });
+          rows.push(
+            ...flattenDict(item as { [key: string]: unknown }, level + 1),
+          );
         } else {
-          i++;
+          rows.push({
+            level,
+            key,
+            value: formatValue(item),
+          });
         }
       }
 
-      return {
-        result: dict,
-        index: i,
-        fullDictSliced,
-      };
+      return rows;
     },
     [],
   );
 
-  React.useEffect(() => {
-    let timerID: number;
-    if (!isFullySliced.current) {
-      timerID = window.setTimeout(() => {
-        const { result, index, fullDictSliced } = getSrcSlice(
-          props.src,
-          cursor,
-        );
-        data.current = {
-          ...result,
-        };
-        isFullySliced.current = fullDictSliced;
-        console.log(fullDictSliced, index);
-        setCursor(index);
-      }, 250);
-    }
-
-    return () => {
-      clearTimeout(timerID);
-    };
-  }, [cursor, props.src, getSrcSlice]);
+  const rows = React.useMemo(() => {
+    return flattenDict(props.src as { [key: string]: unknown });
+  }, [props.src]);
 
   return (
     <ErrorBoundary>
-      <ReactJson {...props} src={data.current} />
+      <div style={props.style} className='DictVisualizer'>
+        <List height={150} itemCount={rows.length} itemSize={13} width={300}>
+          {({ index, style }: ListChildComponentProps) => {
+            const row = rows[index];
+            return (
+              <div
+                key={row.key}
+                className='DictVisualizer__row'
+                style={{
+                  ...style,
+                  paddingLeft: (row.level + 1) * 10,
+                  borderLeft: '1px solid #ccc',
+                }}
+              >
+                <Text>
+                  {row.key}: {row.value}
+                </Text>
+              </div>
+            );
+          }}
+        </List>
+      </div>
     </ErrorBoundary>
   );
 }
