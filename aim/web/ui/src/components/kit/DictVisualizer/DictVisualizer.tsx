@@ -23,9 +23,14 @@ export function toType(obj: any) {
       //bitwise OR produces integers
       type = 'float';
     } else {
-      type = 'integer';
+      type = 'int';
     }
+  } else if (type === 'boolean') {
+    type = 'bool';
+  } else if (type === 'undefined' || type === 'null') {
+    type = '';
   }
+
   return type;
 }
 
@@ -37,33 +42,124 @@ function getType(obj: any) {
     .toLowerCase();
 }
 
+function typeToColor(item: any) {
+  switch (item) {
+    case 'int':
+      return 'rgb(175, 85, 45)';
+    case 'float':
+      return 'rgb(92, 129, 21)';
+    case 'string':
+      return 'rgb(246, 103, 30)';
+    case 'bool':
+      return 'rgb(169, 87, 153)';
+    case '':
+      return '#586069';
+    case 'object':
+      return 'rgb(73, 72, 73)';
+    case 'array':
+      return '#586069';
+    default:
+      return '#1473e6';
+  }
+}
+
 function DictVisualizer(props: IDictVisualizerProps) {
   const flattenDict = React.useCallback(
-    (dict: { [key: string]: unknown }, level: number = 0) => {
+    (dict: { [key: string]: unknown } | unknown[], level: number = 0) => {
       let rows: {
         level: number;
-        key: string;
+        key: string | number | null;
         value: unknown;
-        type: string;
+        sub: string | null;
+        color: string;
       }[] = [];
-      for (let key in dict) {
-        let item: unknown = dict[key];
-        if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
+      if (level === 0) {
+        if (Array.isArray(dict)) {
+          let nestedItemsLength = dict.length;
           rows.push({
             level,
-            key,
-            value: undefined,
-            type: toType(item),
+            key: null,
+            value: '[',
+            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
+            color: typeToColor('array'),
+          });
+        } else {
+          let nestedItemsLength = Object.keys(dict).length;
+          rows.push({
+            level,
+            key: null,
+            value: '{',
+            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
+            color: typeToColor('object'),
+          });
+        }
+      }
+      for (let key in dict) {
+        let item: unknown = Array.isArray(dict) ? dict[+key] : dict[key];
+        let type = toType(item);
+        let color = typeToColor(type);
+        if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
+          let nestedItemsLength = Object.keys(item).length;
+          rows.push({
+            level,
+            key: formatValue(key),
+            value: '{',
+            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
+            color: typeToColor('object'),
           });
           rows.push(
             ...flattenDict(item as { [key: string]: unknown }, level + 1),
           );
+          rows.push({
+            level,
+            key: null,
+            value: '}',
+            sub: null,
+            color: typeToColor('object'),
+          });
+        } else if (Array.isArray(item)) {
+          rows.push({
+            level,
+            key: formatValue(key),
+            value: '[',
+            sub: `${item.length} item${item.length > 1 ? 's' : ''}`,
+            color: typeToColor('array'),
+          });
+          rows.push(...flattenDict(item as unknown[], level + 1));
+          rows.push({
+            level,
+            key: null,
+            value: ']',
+            sub: null,
+            color: typeToColor('array'),
+          });
         } else {
           rows.push({
             level,
-            key,
+            key: Array.isArray(dict) ? +key : formatValue(key),
             value: formatValue(item),
-            type: toType(item),
+            sub: type,
+            color,
+          });
+        }
+      }
+
+      if (level === 0) {
+        if (Array.isArray(dict)) {
+          rows.push({
+            level,
+            key: null,
+            value: ']',
+            sub: null,
+            color: typeToColor('array'),
+          });
+        } else {
+          rows.push({
+            level,
+            key: null,
+            value: '}',
+            sub: null,
+            color: typeToColor('object'),
           });
         }
       }
@@ -86,7 +182,7 @@ function DictVisualizer(props: IDictVisualizerProps) {
               width={width}
               height={height}
               itemCount={rows.length}
-              itemSize={13}
+              itemSize={22}
             >
               {({ index, style }: ListChildComponentProps) => {
                 const row = rows[index];
@@ -96,14 +192,38 @@ function DictVisualizer(props: IDictVisualizerProps) {
                     className='DictVisualizer__row'
                     style={style}
                   >
-                    {Array(row.level)
-                      .fill('_')
-                      .map((_, i) => (
-                        <div key={i} className='DictVisualizer__row__indent' />
-                      ))}
-                    <Text size={14}>{formatValue(row.key)}</Text>:{' '}
-                    <Text size={10}>{row.type}</Text>{' '}
-                    <Text size={14}>{row.value as string}</Text>
+                    {index !== 0 &&
+                      index !== rows.length - 1 &&
+                      Array(row.level + 1)
+                        .fill('_')
+                        .map((_, i) => (
+                          <div
+                            key={i}
+                            className='DictVisualizer__row__indent'
+                          />
+                        ))}
+                    {row.key !== null && (
+                      <Text size={16} className='DictVisualizer__row__key'>
+                        {row.key}:
+                      </Text>
+                    )}
+                    {row.sub !== null && (
+                      <Text
+                        size={12}
+                        className='DictVisualizer__row__sub'
+                        style={{ color: row.color }}
+                      >
+                        {row.sub}
+                      </Text>
+                    )}
+
+                    <Text
+                      size={16}
+                      className='DictVisualizer__row__value'
+                      style={{ color: row.color }}
+                    >
+                      {row.value as string}
+                    </Text>
                   </div>
                 );
               }}

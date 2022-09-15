@@ -9,11 +9,29 @@
 
 .DictVisualizer__row {
   display: flex;
-  padding-left: $space-xs;
-  border-left: $border-dark;
+  align-items: baseline;
 }
 
 .DictVisualizer__row__indent {
-  margin-right: $space-xs;
+  height: 100%;
+  margin-right: $space-md;
   border-left: $border-dark;
+}
+
+.DictVisualizer__row__key {
+  margin-right: $space-xs;
+}
+
+.DictVisualizer__row__sub {
+  margin-right: $space-xxxs;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.DictVisualizer__row__value {
+  white-space: nowrap;
+}
+
+.DictVisualizer__row__value__separator {
+  margin-right: $space-xxxs;
 }
