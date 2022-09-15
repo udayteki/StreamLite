@@ -5,10 +5,12 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 
 import { formatValue } from 'utils/formatValue';
+import { encode } from 'utils/encoder/encoder';
 
 import Text from '../Text';
+import Icon from '../Icon';
 
-import { IDictVisualizerProps } from './DictVisualizer.d';
+import { IDictVisualizerProps, DictVisualizerRow } from './DictVisualizer.d';
 
 import './DictVisualizer.scss';
 
@@ -64,114 +66,167 @@ function typeToColor(item: any) {
 }
 
 function DictVisualizer(props: IDictVisualizerProps) {
+  const [collapsedItems, setCollapsedItems] = React.useState<{
+    [key: string]: boolean;
+  }>({});
   const flattenDict = React.useCallback(
-    (dict: { [key: string]: unknown } | unknown[], level: number = 0) => {
-      let rows: {
-        level: number;
-        key: string | number | null;
-        value: unknown;
-        sub: string | null;
-        color: string;
-      }[] = [];
+    (
+      dict: { [key: string]: unknown } | unknown[],
+      level: number = 0,
+      parentKey: string = 'root',
+    ) => {
+      let rows: DictVisualizerRow[] = [];
       if (level === 0) {
         if (Array.isArray(dict)) {
           let nestedItemsLength = dict.length;
           rows.push({
+            id: parentKey,
+            root: nestedItemsLength > 0,
             level,
             key: null,
-            value: '[',
+            value: `[${
+              nestedItemsLength === 0
+                ? ']'
+                : collapsedItems[parentKey]
+                ? '...]'
+                : ''
+            }`,
             sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
             color: typeToColor('array'),
           });
         } else {
           let nestedItemsLength = Object.keys(dict).length;
           rows.push({
+            id: parentKey,
+            root: nestedItemsLength > 0,
             level,
             key: null,
-            value: '{',
+            value: `{${
+              nestedItemsLength === 0
+                ? '}'
+                : collapsedItems[parentKey]
+                ? '...}'
+                : ''
+            }`,
             sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
             color: typeToColor('object'),
           });
         }
       }
-      for (let key in dict) {
-        let item: unknown = Array.isArray(dict) ? dict[+key] : dict[key];
-        let type = toType(item);
-        let color = typeToColor(type);
-        if (typeof item === 'object' && item !== null && !Array.isArray(item)) {
-          let nestedItemsLength = Object.keys(item).length;
-          rows.push({
-            level,
-            key: formatValue(key),
-            value: '{',
-            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
-            color: typeToColor('object'),
+      if (!collapsedItems[parentKey]) {
+        for (let key in dict) {
+          let item: unknown = Array.isArray(dict) ? dict[+key] : dict[key];
+          let type = toType(item);
+          let color = typeToColor(type);
+          let id = encode({
+            parent: parentKey,
+            key,
           });
-          rows.push(
-            ...flattenDict(item as { [key: string]: unknown }, level + 1),
-          );
-          rows.push({
-            level,
-            key: null,
-            value: '}',
-            sub: null,
-            color: typeToColor('object'),
-          });
-        } else if (Array.isArray(item)) {
-          rows.push({
-            level,
-            key: formatValue(key),
-            value: '[',
-            sub: `${item.length} item${item.length > 1 ? 's' : ''}`,
-            color: typeToColor('array'),
-          });
-          rows.push(...flattenDict(item as unknown[], level + 1));
-          rows.push({
-            level,
-            key: null,
-            value: ']',
-            sub: null,
-            color: typeToColor('array'),
-          });
-        } else {
-          rows.push({
-            level,
-            key: Array.isArray(dict) ? +key : formatValue(key),
-            value: formatValue(item),
-            sub: type,
-            color,
-          });
+          if (Array.isArray(item)) {
+            rows.push({
+              id,
+              root: item.length > 0,
+              level,
+              key: formatValue(key),
+              value: `[${
+                item.length === 0 ? ']' : collapsedItems[id] ? '...]' : ''
+              }`,
+              sub: `${item.length} item${item.length > 1 ? 's' : ''}`,
+              color: typeToColor('array'),
+            });
+            if (!collapsedItems[id] && item.length > 0) {
+              rows.push(...flattenDict(item as unknown[], level + 1, id));
+              rows.push({
+                id,
+                level,
+                key: null,
+                value: ']',
+                sub: null,
+                color: typeToColor('array'),
+              });
+            }
+          } else if (typeof item === 'object' && item !== null) {
+            let nestedItemsLength = Object.keys(item).length;
+            rows.push({
+              id,
+              root: nestedItemsLength > 0,
+              level,
+              key: formatValue(key),
+              value: `{${
+                nestedItemsLength === 0 ? '}' : collapsedItems[id] ? '...}' : ''
+              }`,
+              sub: `${nestedItemsLength} item${
+                nestedItemsLength > 1 ? 's' : ''
+              }`,
+              color: typeToColor('object'),
+            });
+            if (!collapsedItems[id] && nestedItemsLength > 0) {
+              rows.push(
+                ...flattenDict(
+                  item as { [key: string]: unknown },
+                  level + 1,
+                  id,
+                ),
+              );
+              rows.push({
+                id,
+                level,
+                key: null,
+                value: '}',
+                sub: null,
+                color: typeToColor('object'),
+              });
+            }
+          } else {
+            rows.push({
+              id,
+              level,
+              key: Array.isArray(dict) ? +key : formatValue(key),
+              value: formatValue(item),
+              sub: type,
+              color,
+            });
+          }
         }
-      }
 
-      if (level === 0) {
-        if (Array.isArray(dict)) {
-          rows.push({
-            level,
-            key: null,
-            value: ']',
-            sub: null,
-            color: typeToColor('array'),
-          });
-        } else {
-          rows.push({
-            level,
-            key: null,
-            value: '}',
-            sub: null,
-            color: typeToColor('object'),
-          });
+        if (level === 0) {
+          if (Array.isArray(dict)) {
+            rows.push({
+              id: parentKey,
+              level,
+              key: null,
+              value: ']',
+              sub: null,
+              color: typeToColor('array'),
+            });
+          } else {
+            rows.push({
+              id: parentKey,
+              level,
+              key: null,
+              value: '}',
+              sub: null,
+              color: typeToColor('object'),
+            });
+          }
         }
       }
 
       return rows;
     },
-    [],
+    [collapsedItems],
   );
 
   const rows = React.useMemo(() => {
     return flattenDict(props.src as { [key: string]: unknown });
-  }, [props.src]);
+  }, [props.src, flattenDict]);
+
+  function collapseToggler(id: string) {
+    setCollapsedItems((cI) => ({
+      ...cI,
+      [id]: !cI[id],
+    }));
+  }
 
   return (
     <ErrorBoundary>
@@ -202,28 +257,55 @@ function DictVisualizer(props: IDictVisualizerProps) {
                             className='DictVisualizer__row__indent'
                           />
                         ))}
-                    {row.key !== null && (
-                      <Text size={16} className='DictVisualizer__row__key'>
-                        {row.key}:
-                      </Text>
-                    )}
-                    {row.sub !== null && (
-                      <Text
-                        size={12}
-                        className='DictVisualizer__row__sub'
-                        style={{ color: row.color }}
+                    {row.root && (
+                      <div
+                        className='DictVisualizer__row__collapseToggler'
+                        onClick={() => collapseToggler(row.id)}
                       >
-                        {row.sub}
-                      </Text>
+                        <Icon
+                          name={
+                            collapsedItems[row.id]
+                              ? 'arrow-right-contained'
+                              : 'arrow-down-contained'
+                          }
+                          fontSize={9}
+                        />
+                      </div>
                     )}
-
-                    <Text
-                      size={16}
-                      className='DictVisualizer__row__value'
-                      style={{ color: row.color }}
-                    >
-                      {row.value as string}
-                    </Text>
+                    <div className='DictVisualizer__row__content'>
+                      {row.key !== null && (
+                        <Text
+                          size={16}
+                          className='DictVisualizer__row__content__key'
+                        >
+                          {row.key}:
+                        </Text>
+                      )}
+                      {row.sub !== null && (
+                        <Text
+                          size={12}
+                          className='DictVisualizer__row__content__sub'
+                          style={{ color: row.color }}
+                        >
+                          {row.sub}
+                        </Text>
+                      )}
+                      <Text
+                        size={16}
+                        className='DictVisualizer__row__content__value'
+                        style={{
+                          color: row.color,
+                          cursor: collapsedItems[row.id] ? 'pointer' : '',
+                        }}
+                        onClick={
+                          collapsedItems[row.id]
+                            ? () => collapseToggler(row.id)
+                            : undefined
+                        }
+                      >
+                        {row.value as string}
+                      </Text>
+                    </div>
                   </div>
                 );
               }}
