@@ -21,7 +21,7 @@ export function toType(obj: any) {
   if (type === 'number') {
     if (isNaN(obj)) {
       type = 'nan';
-    } else if ((obj | 0) != obj) {
+    } else if ((obj | 0) !== obj) {
       //bitwise OR produces integers
       type = 'float';
     } else {
@@ -55,7 +55,7 @@ function typeToColor(item: any) {
     case 'bool':
       return 'rgb(169, 87, 153)';
     case '':
-      return '#586069';
+      return 'rgb(148, 148, 148)';
     case 'object':
       return 'rgb(73, 72, 73)';
     case 'array':
@@ -91,7 +91,9 @@ function DictVisualizer(props: IDictVisualizerProps) {
                 ? '...]'
                 : ''
             }`,
-            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
+            sub: `${nestedItemsLength} item${
+              nestedItemsLength === 1 ? '' : 's'
+            }`,
             color: typeToColor('array'),
           });
         } else {
@@ -108,7 +110,9 @@ function DictVisualizer(props: IDictVisualizerProps) {
                 ? '...}'
                 : ''
             }`,
-            sub: `${nestedItemsLength} item${nestedItemsLength > 1 ? 's' : ''}`,
+            sub: `${nestedItemsLength} item${
+              nestedItemsLength === 1 ? '' : 's'
+            }`,
             color: typeToColor('object'),
           });
         }
@@ -131,7 +135,7 @@ function DictVisualizer(props: IDictVisualizerProps) {
               value: `[${
                 item.length === 0 ? ']' : collapsedItems[id] ? '...]' : ''
               }`,
-              sub: `${item.length} item${item.length > 1 ? 's' : ''}`,
+              sub: `${item.length} item${item.length === 1 ? '' : 's'}`,
               color: typeToColor('array'),
             });
             if (!collapsedItems[id] && item.length > 0) {
@@ -156,7 +160,7 @@ function DictVisualizer(props: IDictVisualizerProps) {
                 nestedItemsLength === 0 ? '}' : collapsedItems[id] ? '...}' : ''
               }`,
               sub: `${nestedItemsLength} item${
-                nestedItemsLength > 1 ? 's' : ''
+                nestedItemsLength === 1 ? '' : 's'
               }`,
               color: typeToColor('object'),
             });
@@ -183,7 +187,7 @@ function DictVisualizer(props: IDictVisualizerProps) {
               level,
               key: Array.isArray(dict) ? +key : formatValue(key),
               value: formatValue(item),
-              sub: type,
+              sub: type === '' ? null : type,
               color,
             });
           }
