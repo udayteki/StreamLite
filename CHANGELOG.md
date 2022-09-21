@@ -10,9 +10,11 @@
 - Revamp Figures explorer controls and grouping sections for better onboarding and usability (VkoHov, KaroMourad)
 - Adjust the grouping section layout of the Figures explorer (VkoHov)
 - Add fast.ai integration (tmynn)
+- Add command for dangling params cleanup (mihran113)
 
 ### Fixes:
 
+- Change unit-tests data isolation mechanism (alberttorosyan)
 - Adjust the visibility of the run color in tables (VkoHov)
 - Fix response headers for remote tracking server (mihran113)
 
