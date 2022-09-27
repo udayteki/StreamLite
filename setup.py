@@ -44,6 +44,8 @@ readme_text = open('/'.join((here, readme_file)), encoding="utf-8").read()
 LONG_DESCRIPTION = readme_text.strip()
 
 SETUP_REQUIRED = [
+    'setuptools',
+    'aimrocks==0.2.1',
     'Cython==3.0.0a9',
 ]
 
