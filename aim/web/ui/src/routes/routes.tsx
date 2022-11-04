@@ -43,6 +43,9 @@ const ImagesExplore = React.lazy(
 const FiguresExplore = React.lazy(
   () => import(/* webpackChunkName: "figures" */ 'pages/FiguresExplorer'),
 );
+const AudioExplorer = React.lazy(
+  () => import(/* webpackChunkName: "figures" */ 'pages/AudioExplorer'),
+);
 
 const SaveViews = React.lazy(
   () => import(/* webpackChunkName: "figures" */ 'pages/SavedViews'),
@@ -138,6 +141,15 @@ const routes = {
     displayName: 'Figures',
     isExact: true,
     title: pageTitlesEnum.FIGURES_EXPLORER,
+  },
+  AUDIO_EXPLORER: {
+    path: PathEnum.Audio_Explorer,
+    component: AudioExplorer,
+    showInSidebar: true,
+    icon: 'audio',
+    displayName: 'Audio',
+    isExact: true,
+    title: pageTitlesEnum.AUDIOS_EXPLORER,
   },
   SCATTERS: {
     path: PathEnum.Scatters,
