@@ -44,6 +44,10 @@ const FiguresExplore = React.lazy(
   () => import(/* webpackChunkName: "figures" */ 'pages/FiguresExplorer'),
 );
 
+const SaveViews = React.lazy(
+  () => import(/* webpackChunkName: "figures" */ 'pages/SavedViews'),
+);
+
 export interface IRoute {
   path: PathEnum;
   component:
@@ -177,6 +181,14 @@ const routes = {
     displayName: 'Run Detail',
     isExact: false,
     title: pageTitlesEnum.RUN_DETAIL,
+  },
+  SAVED_VIEWS: {
+    path: PathEnum.Saved_Views,
+    component: SaveViews,
+    showInSidebar: true,
+    displayName: 'Saved Views',
+    isExact: true,
+    title: pageTitlesEnum.SAVED_VIEWS,
   },
 };
 

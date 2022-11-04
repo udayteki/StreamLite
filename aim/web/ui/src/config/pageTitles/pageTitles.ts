@@ -10,6 +10,7 @@ const pageTitles = {
   TAGS: 'Tags',
   RUN_DETAIL: '',
   FIGURES_EXPLORER_NEW: 'New Figures',
+  SAVED_VIEWS: 'Saved Views',
 };
 
 export default pageTitles;

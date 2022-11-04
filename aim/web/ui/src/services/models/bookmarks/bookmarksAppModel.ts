@@ -120,9 +120,19 @@ function destroy() {
   bookmarksRequestRef.abort();
   model.destroy();
 }
+
+function resetData() {
+  model.setState({
+    isLoading: true,
+    listData: [],
+    notifyData: [],
+  });
+}
+
 const bookmarkAppModel = {
   ...model,
   initialize,
+  resetData,
   destroy,
   getBookmarksData,
   onBookmarkDelete,
