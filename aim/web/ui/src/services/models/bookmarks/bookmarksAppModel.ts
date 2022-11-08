@@ -9,6 +9,11 @@ import exceptionHandler from 'utils/app/exceptionHandler';
 import onNotificationDelete from 'utils/app/onNotificationDelete';
 
 import createModel from '../model';
+import {
+  IAppData,
+  IDashboardData,
+} from '../../../types/services/models/metrics/metricsAppModel';
+import { BookmarkNotificationsEnum } from '../../../config/notification-messages/notificationMessages';
 
 let bookmarksRequestRef: {
   call: (exceptionHandler: (detail: any) => void) => Promise<any>;
@@ -129,6 +134,42 @@ function resetData() {
   });
 }
 
+async function createBookmark(name: string, description: string, data: any) {
+  const app: IAppData | any = await appsService
+    .createApp({
+      state: data,
+      type: 'figures',
+    })
+    .call((detail: any) => {
+      exceptionHandler({ detail, model });
+    });
+  const bookmark: IDashboardData = await dashboardService
+    .createDashboard({ app_id: app.id, name, description })
+    .call((detail: any) => {
+      exceptionHandler({ detail, model });
+    });
+  if (bookmark.name) {
+    onNotificationAdd({
+      notification: {
+        id: Date.now(),
+        severity: 'success',
+        messages: [BookmarkNotificationsEnum.CREATE],
+      },
+      model,
+    });
+  } else {
+    onNotificationAdd({
+      notification: {
+        id: Date.now(),
+        severity: 'error',
+        messages: [BookmarkNotificationsEnum.ERROR],
+      },
+      model,
+    });
+  }
+  console.log(bookmark);
+}
+
 const bookmarkAppModel = {
   ...model,
   initialize,
@@ -137,6 +178,7 @@ const bookmarkAppModel = {
   getBookmarksData,
   onBookmarkDelete,
   onBookmarksNotificationDelete,
+  createBookmark,
 };
 
 export default bookmarkAppModel;
