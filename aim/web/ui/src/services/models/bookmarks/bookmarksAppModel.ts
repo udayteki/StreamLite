@@ -41,7 +41,7 @@ function getBookmarksData() {
             const app = appsList.find(
               (appData: any) => appData.id === item.app_id,
             );
-            return { ...item, select: app.state.select, type: app.type };
+            return { ...item, select: app.state.select || {}, type: app.type };
           });
           model.setState({
             isLoading: false,
@@ -134,11 +134,16 @@ function resetData() {
   });
 }
 
-async function createBookmark(name: string, description: string, data: any) {
+async function createBookmark(
+  name: string,
+  description: string,
+  type: string,
+  data: any,
+) {
   const app: IAppData | any = await appsService
     .createApp({
       state: data,
-      type: 'figures',
+      type,
     })
     .call((detail: any) => {
       exceptionHandler({ detail, model });

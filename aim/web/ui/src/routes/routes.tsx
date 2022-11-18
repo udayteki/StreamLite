@@ -51,6 +51,10 @@ const SaveViews = React.lazy(
   () => import(/* webpackChunkName: "figures" */ 'pages/SavedViews'),
 );
 
+const SavedView = React.lazy(
+  () => import(/* webpackChunkName: "figures" */ 'pages/SavedViews/SavedView'),
+);
+
 export interface IRoute {
   path: PathEnum;
   component:
@@ -200,6 +204,14 @@ const routes = {
     showInSidebar: true,
     displayName: 'Saved Views',
     isExact: true,
+    title: pageTitlesEnum.SAVED_VIEWS,
+  },
+  SAVED_VIEW: {
+    isExact: false,
+    showInSidebar: false,
+    component: SavedView,
+    displayName: 'Saved View',
+    path: PathEnum.Saved_View,
     title: pageTitlesEnum.SAVED_VIEWS,
   },
 };

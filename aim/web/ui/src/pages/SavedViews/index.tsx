@@ -1,54 +1,20 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import { useModel } from '../../hooks';
 import bookmarkAppModel from '../../services/models/bookmarks/bookmarksAppModel';
-import { ExplorerConfiguration } from '../../modules/BaseExplorer/types';
-import renderer, { getDefaultHydration } from '../../modules/BaseExplorer';
-import { AimObjectDepths, SequenceTypesEnum } from '../../types/core/enums';
-import Figures from '../../modules/BaseExplorer/components/Figures/Figures';
-import bookmarksAppModel from '../../services/models/bookmarks/bookmarksAppModel';
-const defaultConfig = getDefaultHydration();
+import BookmarkCard from '../Bookmarks/components/BookmarkCard/BookmarkCard';
 
-const confFigures = {
-  persist: false,
-  sequenceName: SequenceTypesEnum.Figures,
-  name: 'Figures Explorer Bookmarked',
-  adapter: {
-    objectDepth: AimObjectDepths.Step,
-  },
-  groupings: defaultConfig.groupings,
-  visualizations: {
-    vis1: {
-      component: defaultConfig.Visualizer as FunctionComponent,
-      controls: defaultConfig.controls,
-      box: {
-        component: Figures,
-        hasDepthSlider: defaultConfig.box.hasDepthSlider,
-        initialState: defaultConfig.box.initialState,
-      },
-    },
-  },
-};
-
-function View({
-  config,
-  saveAsNew,
-}: {
-  config: ExplorerConfiguration;
-  saveAsNew: (state: any) => void;
-}) {
-  const Explorer = renderer(config, __DEV__);
-  function save() {
-    // @ts-ignore
-    const state = Explorer.getState();
-    saveAsNew(state);
+function ViewItem({ data }: any) {
+  if (data.type === 'figures') {
+    data.type = 'figures-explorer';
   }
-
   return (
-    <>
-      <button onClick={save}>Create bookmark</button>
-      <Explorer />
-    </>
+    <div>
+      <NavLink to={`/saved-views/${data.app_id}`}>
+        <BookmarkCard {...data} />
+      </NavLink>
+    </div>
   );
 }
 
@@ -56,37 +22,22 @@ function SavedViews() {
   const bookmarksData = useModel(bookmarkAppModel);
 
   React.useEffect(() => {
+    bookmarkAppModel.initialize();
+
     return () => {
       bookmarkAppModel.destroy();
     };
   }, []);
 
-  function getExplorer() {
-    bookmarkAppModel.initialize();
-  }
-
-  function deleteExplorer() {
-    bookmarkAppModel.resetData();
-  }
-
-  function createBookmark(state: any) {
-    bookmarksAppModel.createBookmark(
-      'test new engine',
-      'test new engine',
-      state,
-    );
-  }
-  console.log(bookmarksData);
+  const render = React.useMemo(() => {
+    return bookmarksData?.listData
+      ?.filter((item) => item.type === 'figures' || item.type === 'audio')
+      ?.map((item, index) => <ViewItem key={index} data={item} />);
+  }, [bookmarksData?.listData]);
 
   return (
-    <div>
-      <button onClick={getExplorer}>Get Saved Explorer</button>
-      <button onClick={deleteExplorer}>Delete the Explorer</button>
-      {bookmarksData?.listData.length ? (
-        <View config={confFigures} saveAsNew={createBookmark} />
-      ) : (
-        <div>No explorer</div>
-      )}
+    <div className='flex fdc'>
+      {bookmarksData?.listData.length ? render : <div>Loading ... </div>}
     </div>
   );
 }

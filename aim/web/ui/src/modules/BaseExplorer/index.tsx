@@ -1,4 +1,5 @@
 import React from 'react';
+import { omit } from 'lodash-es';
 
 import createEngine from 'modules/core/engine/explorer-engine';
 import { VisualizationConfig } from 'modules/core/engine/visualizations';
@@ -99,9 +100,12 @@ function createExplorer(
     }
 
     Renderable.getState = function () {
-      return engine.useStore.getState();
+      return omit(engine.useStore.getState(), ['events']);
     };
 
+    Renderable.setState = function (state: any) {
+      engine.useStore.setState({ ...state.state });
+    };
     return Renderable;
   }
 

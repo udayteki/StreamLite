@@ -16,6 +16,7 @@ enum PathEnum {
   Audio_Explorer = '/audios',
   New_Figures_Explorer = '/new-fig',
   Saved_Views = '/saved-views',
+  Saved_View = '/saved-views/:id',
 }
 
 export { PathEnum };

@@ -132,7 +132,7 @@ function QueryForm(props: Omit<IQueryFormProps, 'visualizationName'>) {
       });
     }
   }, [engine, isExecuting, query, sequenceName, ranges]);
-
+  console.log(sequenceName);
   const autocompleteContext: {
     suggestions: Record<string | number | symbol, unknown>;
     advancedSuggestions: Record<string | number | symbol, unknown>;

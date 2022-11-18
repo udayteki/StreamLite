@@ -25,6 +25,11 @@ export const BookmarkIconType: {
   params: { name: 'params', tooltipTitle: 'Params Explorer' },
   metrics: { name: 'metrics', tooltipTitle: 'Metrics Explorer' },
   scatters: { name: 'scatterplot', tooltipTitle: 'Scatters Explorer' },
+  'figures-explorer': {
+    name: 'figures-explorer',
+    tooltipTitle: 'Figures Explorer',
+  },
+  audio: { name: 'audio', tooltipTitle: 'Audio Explorer' },
 };
 
 function BookmarkCard({
@@ -111,7 +116,7 @@ function BookmarkCard({
             {description}
           </Text>
         </div>
-        {tags.length && !select.advancedMode ? (
+        {tags.length && select && !select.advancedMode! ? (
           <div className='BookmarkCard__selected__metrics ScrollBar__hidden'>
             {tags.map((tag, index) => {
               return (
