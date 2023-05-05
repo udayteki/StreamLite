@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+- Add the ability to track and visualize 3D figures (pabhermoso)
 - Add activeloop deeplake plugin (drahnreb)
 - Revamp grouping popovers design in Base Explorers (KaroMourad, arsengit)
 - Add the ability to group by `grid` type in Base Explorers (KaroMourad)
@@ -12,6 +13,7 @@
 - Relocate aim explorers to `Explorers` page (arsengit)
 - Add functionality for custom context in the PyTorch Ignite (tmynn)
 - Extend `aim.ext.tensorboard_tracker.run.Run` to allow stdout logging and system stats and parameter logging (alansaul)
+- Switch to patched version of official pynvml(mihran113)
 
 ### Fixes
 
