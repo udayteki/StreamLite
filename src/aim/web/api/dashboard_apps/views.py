@@ -1,4 +1,5 @@
 import json
+import os
 
 from fastapi import Depends, HTTPException
 from aim.web.api.utils import APIRouter  # wrapper for fastapi.APIRouter
@@ -9,7 +10,8 @@ from aim.web.api.dashboard_apps.pydantic_models import (
     ExploreStateCreateIn,
     ExploreStateUpdateIn,
     ExploreStateGetOut,
-    ExploreStateListOut
+    ExploreStateListOut,
+    AppStateGetOut
 )
 from aim.web.api.dashboard_apps.serializers import explore_state_response_serializer
 from aim.web.api.db import get_session
@@ -23,6 +25,36 @@ async def dashboard_apps_list_api(session: Session = Depends(get_session)):
     result = []
     for es in explore_states:
         result.append(explore_state_response_serializer(es))
+    return result
+
+
+@dashboard_apps_router.get('/app/', response_model=AppStateGetOut)
+async def dashboard_apps_app_api():
+    app_path = os.environ["AIM_APP_PATH"]
+
+    python_files = []
+    files_contents = {}
+
+    # Traverse files and directories, collect python scripts
+    for root, _, files in os.walk(app_path):
+        for file in files:
+            if file.endswith('.py'):
+                rel_path = os.path.relpath(os.path.join(root, file), app_path)
+                python_files.append(rel_path)
+
+    # Load contents
+    for file_path in python_files:
+        with open(os.path.join(app_path, file_path), 'r') as file:
+            contents = file.read()
+            files_contents[file_path] = contents
+
+    result = {
+        'app_path': app_path,
+        'app_dir_name': os.path.basename(app_path),
+        'files': python_files,
+        'files_contents': files_contents,
+    }
+
     return result
 
 

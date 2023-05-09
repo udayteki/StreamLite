@@ -34,6 +34,10 @@ from aim.core.utils.tracking import analytics
                                                         file_okay=False,
                                                         dir_okay=True,
                                                         writable=True))
+@click.option('--app', required=False, type=click.Path(exists=True,
+                                                       file_okay=False,
+                                                       dir_okay=True,
+                                                       writable=True))
 @click.option('--tf_logs', type=click.Path(exists=True, readable=True))
 @click.option('--dev', is_flag=True, default=False)
 @click.option('--ssl-keyfile', required=False, type=click.Path(exists=True,
@@ -49,7 +53,7 @@ from aim.core.utils.tracking import analytics
 @click.option('--profiler', is_flag=True, default=False)
 @click.option('--log-level', required=False, default='', type=str)
 def up(dev, host, port, workers, uds,
-       repo, tf_logs,
+       repo, app, tf_logs,
        ssl_keyfile, ssl_certfile,
        base_path, force_init,
        profiler, log_level):
@@ -103,6 +107,8 @@ def up(dev, host, port, workers, uds,
 
     if tf_logs:
         os.environ[AIM_TF_LOGS_PATH_KEY] = tf_logs
+    if app:
+        os.environ["AIM_APP_PATH"] = os.path.abspath(os.path.join(os.getcwd(), app))
 
     try:
         db_cmd = build_db_upgrade_command()

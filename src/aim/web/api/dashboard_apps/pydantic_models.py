@@ -22,4 +22,11 @@ class ExploreStateGetOut(BaseModel):
     state: dict
 
 
+class AppStateGetOut(BaseModel):
+    app_path: str
+    files: list
+    files_contents: dict
+    app_dir_name: str
+
+
 ExploreStateListOut = List[ExploreStateGetOut]

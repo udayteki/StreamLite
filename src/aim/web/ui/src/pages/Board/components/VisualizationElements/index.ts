@@ -102,6 +102,12 @@ const ButtonVizElement = React.lazy(
       /* webpackPrefetch: true, webpackChunkName: "Button" */ './ButtonVizElement'
     ),
 );
+const BoardLinkVizElement = React.lazy(
+  () =>
+    import(
+      /* webpackPrefetch: true, webpackChunkName: "BoardLinkVizElement" */ './BoardLinkVizElement'
+    ),
+);
 const SwitchVizElement = React.lazy(
   () =>
     import(
@@ -160,6 +166,7 @@ export type VizElementKey =
   | 'Slider'
   | 'TextInput'
   | 'Button'
+  | 'BoardLink'
   | 'Switch'
   | 'TextArea'
   | 'Radio'
@@ -169,6 +176,7 @@ export type VizElementKey =
 const VizElementsMap: Record<VizElementKey, React.FunctionComponent<any>> = {
   // input elements
   Button: ButtonVizElement,
+  BoardLink: BoardLinkVizElement,
   TextInput: TextInputVizElement,
   Switch: SwitchVizElement,
   TextArea: TextAreaVizElement,

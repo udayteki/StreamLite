@@ -1,6 +1,7 @@
 enum PathEnum {
   Dashboard = '/',
   Explorers = '/explorers',
+  App = '/app',
   Runs = '/runs',
   Metrics = '/explorers/metrics',
   Metrics_Id = '/explorers/metrics/:appId',

@@ -818,6 +818,34 @@ class Button(Component):
         ...
 
 
+class BoardLink(Component):
+    def __init__(self, to, key=None, block=None):
+        component_type = "BoardLink"
+        component_key = update_viz_map(component_type, key)
+        super().__init__(component_key, component_type, block)
+
+        self.data = to
+
+        self.options = {
+            "size": None,
+            "variant": None,
+            "color": None,
+            "label": "Open: " + to,
+        }
+
+        self.render()
+
+# def navigate(to):
+#     print(to)
+# #     from js import setState
+# #
+# #     if board_id not in state:
+# #         state[board_id] = {}
+# #
+# #     state[board_id].update(update)
+# #     setState(state, board_id)
+
+
 class Switch(Component):
     def __init__(self, checked=None, size=None, defaultChecked=None, disabled=None, key=None, block=None):
         component_type = "Switch"
@@ -1046,6 +1074,10 @@ class UI:
     def link(self, *args, **kwargs):
         link = Link(*args, **kwargs, block=self.block_context)
         return link
+
+    def board_link(self, *args, **kwargs):
+        board_link = BoardLink(*args, **kwargs, block=self.block_context)
+        return board_link
 
     # Aim sequence viz components
     def line_chart(self, *args, **kwargs):
