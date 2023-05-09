@@ -47,14 +47,17 @@ interface BoardRendererProps {
 }
 
 const BoardRenderer: FC<BoardRendererProps> = ({ board, data }) => {
+  // console.log(board, data);
   const code = data.files_contents[board.path];
+  // console.log(code);
   const lines = code.split('\n');
-  const embedPattern = /^BoardEmbed\("(.*?)"\)$/;
-  const linkPattern = /^BoardLink\("(.*?)"\)$/;
+  const embedPattern = /BoardEmbed\(["|'](.*)["|']\)\n*$/;
+  const linkPattern = /BoardLink\(["|'](.*)["|']\)\n*$/;
   const replacedLines = lines.map((line: string) => {
     // Replace embeds
     const embedMatch = line.match(embedPattern);
     if (embedMatch) {
+      // console.log(embedMatch);
       const filePath = embedMatch[1].replace(/\./g, '/') + '.py';
       const relPath = filePath
         .replace(new RegExp(`^${data.app_dir_name}/?`), '')
@@ -68,6 +71,7 @@ const BoardRenderer: FC<BoardRendererProps> = ({ board, data }) => {
     // Replace links
     const linkMatch = line.match(linkPattern);
     if (linkMatch) {
+      // console.log(linkMatch);
       const filePath = linkMatch[1].replace(/\./g, '/') + '.py';
       const relPath = filePath
         .replace(new RegExp(`^${data.app_dir_name}/?`), '')

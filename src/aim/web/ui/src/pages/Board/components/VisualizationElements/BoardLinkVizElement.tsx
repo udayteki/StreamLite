@@ -6,7 +6,8 @@ import appModel from '../../../../services/models/app/appModel';
 
 function BoardLinkVizElement(props: any) {
   const onClick = () => {
-    appModel.selectFile('exps/nested_import.py');
+    console.log(props);
+    appModel.selectFile(props.data);
   };
 
   return (
