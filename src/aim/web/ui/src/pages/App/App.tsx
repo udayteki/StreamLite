@@ -17,7 +17,12 @@ import { TopBar } from 'config/stitches/foundations/layout';
 import Board from 'pages/Board/Board';
 
 import useApp from './useApp';
-import { AppContainer, BoardContainer, BoardWrapper } from './App.style';
+import {
+  AppWrapper,
+  BoardSection,
+  BrowseSection,
+  BoardWrapper,
+} from './App.style';
 
 interface FileListProps {
   filesList: string[];
@@ -68,12 +73,11 @@ const BoardRenderer: FC<BoardRendererProps> = ({ board, data }) => {
         .replace(new RegExp(`^${data.app_dir_name}/?`), '')
         .trim();
       return `BoardLink("${relPath}")`;
-      // return 'pass';
     }
     return line;
   });
   const fullCode = replacedLines.join('\n');
-  console.log(fullCode);
+  // console.log(fullCode);
   return (
     <BoardWrapper>
       <Board
@@ -100,20 +104,21 @@ function App(): React.FunctionComponentElement<React.ReactNode> {
           <p>Loading...</p>
         </>
       ) : (
-        <AppContainer>
-          <Text color='$textPrimary' size='$3' weight='$2'>
-            Project:
-          </Text>
-          <FileList filesList={data.files} onFileClick={handleFileClick} />
-          {!!board?.path && (
-            <BoardContainer>
-              <Text color='$textPrimary' size='$3' weight='$2'>
-                Selected board preview:
-              </Text>
+        <AppWrapper>
+          <BoardSection>
+            {!!board?.path ? (
               <BoardRenderer board={board} data={data} />
-            </BoardContainer>
-          )}
-        </AppContainer>
+            ) : (
+              <Text size='$3'>Select the board</Text>
+            )}
+          </BoardSection>
+          <BrowseSection>
+            <Text color='$textPrimary' size='$3' weight='$2'>
+              Browse:
+            </Text>
+            <FileList filesList={data.files} onFileClick={handleFileClick} />
+          </BrowseSection>
+        </AppWrapper>
       )}
     </ErrorBoundary>
   );

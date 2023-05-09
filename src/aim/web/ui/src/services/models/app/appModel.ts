@@ -15,7 +15,7 @@ const model = createModel<any>({
   isLoading: true,
   data: false,
   board: {
-    path: '',
+    path: 'main.py',
   },
   notifyData: [],
 });
